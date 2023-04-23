@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TO DO</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>TO DO</h1>
+    </header>
+    <main>
+        <form action="" id="task-input-form"> 
+            <input type="text" placeholder="Enter your task..." id="new-task-input">
+            <button type="submit" id="btn">Add Task</button>
+        </form>
+        <h2 style="margin-top: 30px;">Your Tasks</h2>
+        <div id="tasks">
+            <div class="task-item">
+               <!-- <h3>First Task Here</h3>
+               <p class="delete-btn">Delete</p> -->
+            </div>
+        </div>
+    </main>
+</body>
+<script>
+
+
+   let counter = 0;
+   
+let form = document.getElementById('task-input-form');
+form.addEventListener("submit",(e) => {
+   if(document.getElementById('new-task-input').value==""){
+    alert("Input field is empty")
+   }
+   else
+   {
+    counter++;
+    let taskValue = document.getElementById('new-task-input').value;
+    let key = counter + '-' + Date.now(); // generate a unique key
+    localStorage.setItem(key, taskValue);
+    e.preventDefault(); // prevent the form from submitting
+    let task = document.getElementById("tasks");
+
+    let taskItem = document.createElement('div');
+    taskItem.classList.add('task-item');
+    task.appendChild(taskItem)
+
+    let taskTitle = document.createElement('h3');
+    taskTitle.innerHTML = localStorage.getItem(key);
+    taskItem.appendChild(taskTitle);
+    let deleteBtn=document.createElement('p')
+    deleteBtn.classList.add('delete-btn')
+    deleteBtn.innerHTML="Delete"
+    taskItem.appendChild(deleteBtn)
+    
+   }
+
+});
+
+
+// Retreiving data from the local storage on loading
+// Get all keys from local storage
+let keys = Object.keys(localStorage);
+
+// Loop through the keys and add each task to the page
+for (let i = 0; i < keys.length; i++) {
+    let key = keys[i];
+    let taskValue = localStorage.getItem(key);
+    var task = document.getElementById("tasks");
+
+     var taskItem = document.createElement('div');
+    taskItem.classList.add('task-item');
+    task.appendChild(taskItem)
+
+    let taskTitle = document.createElement('h3');
+    taskTitle.innerHTML = taskValue;
+    taskItem.appendChild(taskTitle);
+
+    var deleteBtn = document.createElement('p');
+    deleteBtn.classList.add('delete-btn');
+    deleteBtn.innerHTML = "Delete";
+    taskItem.appendChild(deleteBtn);
+}
+// deleting the item
+let deleteBtns = document.querySelectorAll('.delete-btn');
+for (let i = 0; i < deleteBtns.length; i++) {
+    deleteBtns[i].addEventListener('click', function(e){
+        let taskItem = e.target.parentNode;
+        taskItem.parentNode.removeChild(taskItem);
+        let valueToFind =taskItem.getElementsByTagName('h3')[0].innerHTML
+        // alert(valueToFind)
+        for (let key in localStorage) { 
+            if (localStorage.getItem(key) === valueToFind){
+               console.log('found')
+               localStorage.removeItem(key)
+            }  
+        }
+    })
+}
+// localStorage.clearItems()
+</script>
+</html>
